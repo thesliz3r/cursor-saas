@@ -3,6 +3,28 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 import { translations, convertToWords } from './translations'
 import './App.css'
 
+// AdSense Component
+const AdUnit = ({ slot, format = 'auto', responsive = true, style = {} }) => {
+  useEffect(() => {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.error('AdSense error:', e);
+    }
+  }, []);
+
+  return (
+    <ins
+      className="adsbygoogle"
+      style={{ display: 'block', ...style }}
+      data-ad-client="ca-pub-9260069346980713"
+      data-ad-slot={slot}
+      data-ad-format={format}
+      data-full-width-responsive={responsive}
+    />
+  );
+};
+
 // Language switcher component
 const LanguageSwitcher = ({ currentLang, onLanguageChange }) => (
   <div className="language-switcher">
@@ -85,6 +107,10 @@ function App() {
   });
   const [copiedHistoryId, setCopiedHistoryId] = useState(null);
   const [copiedBreakdownId, setCopiedBreakdownId] = useState(null);
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme || 'light';
+  });
 
   // Add ref for input focus
   const amountInputRef = useRef(null);
@@ -95,7 +121,9 @@ function App() {
   // Apply theme effect
   useEffect(() => {
     document.body.className = isDarkMode ? 'dark-theme' : 'light-theme';
-  }, [isDarkMode]);
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [isDarkMode, theme]);
 
   // Focus amount input on mount
   useEffect(() => {
@@ -173,9 +201,11 @@ function App() {
   }, []);
 
   const handleHistoryItemCopy = useCallback((item) => {
-    const text = `${t.baseAmount}: ${item.baseAmount} ${item.currency}
-${t.vatAmount}: ${item.vatAmount} ${item.currency} (${item.rate}%)
-${t.totalAmount}: ${item.total} ${item.currency}`;
+    const text = `${t.baseAmount}: ${item.baseAmount} ${item.currency}${showInWords ? `\n${convertToWords(parseFloat(item.baseAmount), language, item.currency)}` : ''}
+
+${t.vatAmount}: ${item.vatAmount} ${item.currency} (${item.rate}%)${showInWords ? `\n${convertToWords(parseFloat(item.vatAmount), language, item.currency)}` : ''}
+
+${t.totalAmount}: ${item.total} ${item.currency}${showInWords ? `\n${convertToWords(parseFloat(item.total), language, item.currency)}` : ''}`;
     
     navigator.clipboard.writeText(text).then(() => {
       setCopiedHistoryId(item.id);
@@ -183,7 +213,7 @@ ${t.totalAmount}: ${item.total} ${item.currency}`;
         setCopiedHistoryId(null);
       }, 1000);
     });
-  }, [t]);
+  }, [t, language, showInWords]);
 
   const handleBreakdownCopy = useCallback((item, type) => {
     let text;
@@ -243,15 +273,35 @@ ${t.totalAmount}: ${item.total} ${item.currency}`;
     }
   };
 
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
   return (
     <div className={`app-wrapper ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <SpeedInsights />
+      {/* Top Advertisement */}
+      <div className="ad-container top">
+        <AdUnit slot="1234567890" format="horizontal" />
+      </div>
+
       <header className="app-header">
         <div className="header-content">
           <div className="logo-section">
             <h1 className="app-title">{t.title}</h1>
           </div>
           <div className="header-controls">
+            <button className="theme-switch" onClick={toggleTheme}>
+              {theme === 'light' ? (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+              )}
+            </button>
             <LanguageSwitcher 
               currentLang={language}
               onLanguageChange={setLanguage}
@@ -259,6 +309,16 @@ ${t.totalAmount}: ${item.total} ${item.currency}`;
           </div>
         </div>
       </header>
+
+      {/* Left Side Advertisement */}
+      <div className="ad-container side left">
+        <AdUnit slot="9876543210" format="vertical" responsive={false} style={{ width: '160px', height: '600px' }} />
+      </div>
+
+      {/* Right Side Advertisement */}
+      <div className="ad-container side right">
+        <AdUnit slot="5432109876" format="vertical" responsive={false} style={{ width: '160px', height: '600px' }} />
+      </div>
 
       <main className="main-container">
         <div className="calculator-section">
@@ -426,6 +486,11 @@ ${t.totalAmount}: ${item.total} ${item.currency}`;
           )}
         </div>
 
+        {/* Main Content Advertisement */}
+        <div className="ad-container">
+          <AdUnit slot="6789012345" format="horizontal" />
+        </div>
+
         {/* History Section */}
         {history.length > 0 && (
           <div className="history-section">
@@ -445,19 +510,45 @@ ${t.totalAmount}: ${item.total} ${item.currency}`;
                   className={`history-item ${copiedHistoryId === item.id ? 'copied' : ''}`}
                   onClick={() => handleHistoryItemCopy(item)}
                 >
+                  <div className="history-timestamp">
+                    {new Date(item.timestamp).toLocaleString('az-AZ', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      hour12: false
+                    }).replace(',', '')}
+                  </div>
                   <div className="history-breakdown">
                     <div className="breakdown-item">
                       <span className="breakdown-label">ƏDVSİZ MƏBLƏĞ</span>
                       <span className="breakdown-value">{item.baseAmount} {item.currency}</span>
                     </div>
+                    {showInWords && (
+                      <div className="breakdown-byword">
+                        {convertToWords(parseFloat(item.baseAmount), language, item.currency)}
+                      </div>
+                    )}
                     <div className="breakdown-item">
                       <span className="breakdown-label">ƏDV ({item.rate}%)</span>
                       <span className="breakdown-value">{item.vatAmount} {item.currency}</span>
                     </div>
+                    {showInWords && (
+                      <div className="breakdown-byword">
+                        {convertToWords(parseFloat(item.vatAmount), language, item.currency)}
+                      </div>
+                    )}
                     <div className="breakdown-item">
                       <span className="breakdown-label">ƏDVLİ MƏBLƏĞ</span>
                       <span className="breakdown-value">{item.total} {item.currency}</span>
                     </div>
+                    {showInWords && (
+                      <div className="breakdown-byword">
+                        {convertToWords(parseFloat(item.total), language, item.currency)}
+                      </div>
+                    )}
                   </div>
                   <button
                     className="delete-history-item"

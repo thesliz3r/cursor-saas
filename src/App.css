@@ -1,5 +1,6 @@
 /* Theme Variables */
 :root {
+  /* Light Theme (default) */
   --primary-color: #2563eb;
   --primary-hover: #1d4ed8;
   --success-color: #16a34a;
@@ -12,6 +13,8 @@
   --bg-dark: #111827;
   --card-light: #ffffff;
   --card-dark: #1f2937;
+  --border-color: #e5e7eb;
+  --input-bg: #ffffff;
   --border-radius: 8px;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
@@ -19,25 +22,43 @@
   --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.3);
 }
 
+/* Dark Theme */
+[data-theme='dark'] {
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --bg-light: #111827;
+  --card-light: #1f2937;
+  --border-color: #374151;
+  --input-bg: #1f2937;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+  --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.5);
+}
+
 /* Base Styles */
 body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f8fafc;
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .app-wrapper {
   min-height: 100vh;
   background: var(--bg-light);
   color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Header Styles */
 .app-header {
-  background: var(--bg-light);
+  background: var(--card-light);
   padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .header-content {
@@ -93,11 +114,13 @@ body {
 
 /* Calculator Section */
 .calculator-section {
-  background: white;
+  background: var(--card-light);
   border-radius: var(--border-radius);
   padding: 1.5rem;
   box-shadow: var(--shadow-md);
   margin-bottom: 1rem;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Input Styles */
@@ -112,10 +135,13 @@ body {
   flex: 1;
   height: 40px;
   padding: 0 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 1rem;
   outline: none;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .amount-input:focus {
@@ -126,9 +152,9 @@ body {
 .currency-select {
   height: 40px;
   padding: 0 2rem 0 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  background: white;
+  background: var(--input-bg);
   font-size: 1rem;
   width: 120px;
   cursor: pointer;
@@ -138,6 +164,8 @@ body {
   background-position: right 0.5rem center;
   background-repeat: no-repeat;
   background-size: 1.5em 1.5em;
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .currency-select:focus {
@@ -155,20 +183,19 @@ body {
 .rate-button {
   height: 40px;
   padding: 0 1.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  background: white;
+  background: var(--input-bg);
   color: var(--text-primary);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   flex: 1;
 }
 
 .rate-button:hover {
   border-color: var(--primary-color);
-  color: var(--primary-color);
 }
 
 .rate-button.active {
@@ -181,11 +208,14 @@ body {
   width: 80px;
   height: 40px;
   padding: 0 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 1rem;
   text-align: center;
   outline: none;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .custom-rate:focus {
@@ -203,20 +233,19 @@ body {
 .vat-type-button {
   height: 40px;
   padding: 0 1.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  background: white;
+  background: var(--input-bg);
   color: var(--text-primary);
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   flex: 1;
 }
 
 .vat-type-button:hover {
   border-color: var(--primary-color);
-  color: var(--primary-color);
 }
 
 .vat-type-button.active {
@@ -271,12 +300,13 @@ body {
 
 /* Results Section */
 .result-card {
-  background: white;
+  background: var(--card-light);
   border-radius: var(--border-radius);
   padding: 1.5rem;
   margin-bottom: 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
   box-shadow: var(--shadow-md);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .result-grid {
@@ -312,7 +342,7 @@ body {
 .result-item.total {
   margin-top: 0.5rem;
   padding-top: 1rem;
-  border-top: 2px solid #e5e7eb;
+  border-top: 2px solid var(--border-color);
 }
 
 .result-item.total .result-value {
@@ -350,11 +380,12 @@ body {
 
 /* History Section */
 .history-section {
-  background: white;
+  background: var(--card-light);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-md);
   margin-top: 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .history-header {
@@ -362,7 +393,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1.25rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
   min-height: 24px;
 }
 
@@ -400,7 +431,7 @@ body {
 
 .history-item {
   padding: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-color);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -429,11 +460,26 @@ body {
   position: relative;
 }
 
+.history-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
 .breakdown-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.125rem 0;
+}
+
+.breakdown-byword {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 0.125rem;
+  padding-right: 3rem;
 }
 
 .breakdown-label {
@@ -573,6 +619,88 @@ body {
   
   .delete-history-item {
     width: 32px;
+  }
+}
+
+/* Theme Switch */
+.theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.theme-switch:hover {
+  color: var(--primary-color);
+}
+
+.theme-switch svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Advertisement Containers */
+.ad-container {
+  width: 100%;
+  min-height: 90px;
+  background: var(--card-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.ad-container.top {
+  margin: 0;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.ad-container.side {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 160px;
+  min-height: 600px;
+  margin: 0;
+}
+
+.ad-container.side.left {
+  left: 0;
+  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.ad-container.side.right {
+  right: 0;
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+@media (max-width: 1400px) {
+  .ad-container.side {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ad-container {
+    min-height: 60px;
   }
 }
 
